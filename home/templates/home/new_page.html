@@ -1,0 +1,58 @@
+{% extends 'home/home.html' %}
+{% block content %}
+{% if messages %}
+<ul class="messages pt-2">
+    {% for message in messages %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if message.tags == 'error' %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button class="close" id="close" type="button" data-dismiss="alert" aria-label="Close"><span
+                        class="font-weight-light" aria-hidden="true">X</span>
+                </button>
+            </div>
+            {% endif %}
+            {% if message.tags == 'success' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button class="close" id="close" type="button" data-dismiss="alert" aria-label="Close"><span
+                        class="font-weight-light" aria-hidden="true">X</span>
+                </button>
+            </div>
+            {% endif %}
+            {% if message.tags == 'info' %}
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button class="close" id="close" type="button" data-dismiss="alert" aria-label="Close"><span
+                        class="font-weight-light" aria-hidden="true">X</span>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="grey-heading">Wiki Title</h3>
+        <div class="featured-post-wrapper">
+            <div class="featured-post-text-wrapper">
+                <h5 class="black-heading font-weight-bold">Title: {{ wiki_object.title }}</h5>
+                <p class="black-heading">Viewed: {{ wiki_object.views }} times</p>
+                <p class="black-heading">Description: {{ wiki_object.description }}</p>
+                <h6 class="black-heading">Created At: {{ wiki_object.created_at }}</h6>
+                <div class="row">
+                    <div class="col-md-4">
+                        <center>
+                            <a class="btn btn-warning btn-sm btn-block"
+                                href="{% url 'edit_wiki_object' unique_id=wiki_object.unique_id %}">Edit</a>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

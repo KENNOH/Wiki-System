@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wiki System</title>
+    <!-- Scripts -->
+    {% load static %}
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
+    <!-- Styles -->
+    <link href="{% static 'css/app.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <nav class="navbar-fixed-to-top navbar navbar-expand-md navbar-light navbar-laravel">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <h4>Wiki System</h4>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Right Side Of Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Authentication Links -->
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'sign_out' %}"><i class="fa fa-power-off"></i> Sign Out</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link sales-btn" href="{% url 'sign_in' %}">Sign In</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <br><br>
+        <main class="">
+            {% block content %}
+            <div class="featured-sec">
+                <div class="container featured-sec-inner">
+
+                    <div class="row">
+                        <div class="col-md-6 mt-5">
+                            <h3 class="grey-heading">Search</h3>
+                            <form method="GET" action="{% url 'search' %}" style="margin-bottom:15px;">{% csrf_token %}
+                                <div class="input-group" style="border-right:1px solid #ced4da;">
+                                    <input type="text" id="search" name="search_key" class="make-square-left form-control"
+                                        style="border-right:0px!important;" placeholder="Search">
+                                    <div class="input-group-btn">
+                                        <button class="wht make-square-right btn btn-default"
+                                            style="border:1px solid #ced4da;" type="submit">
+                                            <i class="fa fa-search" style="color:#999999;"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <div class="row align-items-center justify-content-between">
+                                        <div class="col-6 col-sm-auto d-flex align-items-center pr-0">
+                                            <p class="fs-0 mb-0 text-nowrap py-2 py-xl-0 headers">Most Recent Wiki Titles</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body px-0 pt-0">
+                                    <div class="dashboard-data-table">
+                                        <table class="table table-sm table-dashboard fs--1 data-table border-bottom"
+                                            data-options='{"responsive":false,"pagingType":"simple","lengthChange":false,"searching":false,"order": [[6,"asc"]],"pageLength":10,"columnDefs":[{"targets":[0,6],"orderable":true}],"buttons":["copy","excel"]}'>
+                                            <thead class="bg-200 text-900">
+                                                <tr>
+                                                    <th class="sort pr-1 align-middle">Unique Id</th>
+                                                    <th class="sort pr-1 align-middle">Title</th>
+                                                    <th class="sort pr-1 align-middle">Number Of Views</th>
+                                                    <th class="sort pr-1 align-middle">External link</th>
+                                                    <th class="sort pr-1 align-middle">Description</th>
+                                                    <th class="sort pr-1 align-middle">Created On</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="purchases">
+                                                {% for wiki in wiki_found_items %}
+                                                <tr class="btn-reveal-trigger">
+                                                    <td class="align-middle"><a class="font-weight-bold text-danger" href="{% url 'new_page' unique_id=wiki.unique_id  %}" target="blank">[ {{wiki.unique_id}} ]</a></td>
+                                                    <td class="align-middle">{{wiki.title}}</td>
+                                                    <td class="align-middle">{{wiki.views}}</td>
+                                                    <td class="align-middle font-weight-bold text-danger"><a class="font-weight-bold text-danger" href="{{wiki.external_link}}" target="blank">[ {{wiki.external_link}} ]</a></td>
+                                                    <td class="align-middle">{{wiki.description}}</td>
+                                                    <td class="align-middle">{{wiki.created_at}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        <div class="pagination">
+                                            <span class="step-links">
+                                            {% if wiki_found_items.has_previous %}
+                                                <a href="?page=1" class="btn btn-primary btn-sm btn-block">&laquo; first</a>
+                                                <a href="?page={{ wiki_found_items.previous_page_number }}" class="btn btn-primary btn-sm btn-block">previous</a>
+                                            {% endif %}
+                                            {% if wiki_found_items.has_next %}
+                                            <a href="?page={{ wiki_found_items.next_page_number }}" class="btn btn-primary btn-sm btn-block">next</a>
+                                            <a href="?page={{ wiki_found_items.paginator.num_pages }}" class="btn btn-primary btn-sm btn-block">last &raquo;</a> {% endif %}
+                                            </span>
+                                            <p>
+                                                Page {{ wiki_found_items.number }} of {{ wiki_found_items.paginator.num_pages }}.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </main>
+        <footer>
+            <div class="container">
+                <div class="row"></div>
+                <div class="row"></div>
+                <div class="row"></div>
+                <div class="row"></div>
+            </div>
+        </footer>
+    </div>
+</body>
+<script src="{% static 'js/app.js' %}" defer></script>
+</html>
