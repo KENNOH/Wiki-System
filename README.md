@@ -15,7 +15,7 @@ I recommend creating a virtual env for all the python dependencies.
 	python3 manage.py migrate
 
 
-# To set up Celery for running automatic backups
+# To set up Celery
 To configure and celery you need first install and configure rabbitmq server
 Once set up just update the credentials on the .env file
 To run celery on windows open another powershell or linux terminal or a cmd tab in the project root and run the command
