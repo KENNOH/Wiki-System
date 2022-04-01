@@ -23,12 +23,9 @@ To run celery on windows open another powershell or linux terminal or a cmd tab 
 	celery -A wiki_system worker --pool=solo -l info
 
 
-And on another terminal run the celery beat
+On Linux to run celery for a single core server
 
-	celery -A wiki_system beat -l info
-
-*** Although not recommended for multiple horizontal instances, to run celery worker and beat in one command: ***
-	celery -A wiki_system worker --concurrency=3 beat -l info
+	celery -A wiki_system worker --concurrency=3  -l info
 
 *** Where 3 is the number of workers determined by the cpu cores available in the server using the formula: ***
 	workers = (2 * cores) + 1
