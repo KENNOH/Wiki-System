@@ -7,6 +7,8 @@ from django.db.models import Q
 from .models import *
 from .forms import *
 from .tasks import update_wiki_views
+from .utils import generate_description
+
 
 
 # Create your views here.
@@ -40,6 +42,15 @@ def new_page(request,unique_id):
     args = {'wiki_object':wiki_object}
     return render(request, 'home/new_page.html',args)
 
+
+def fetch_description(request,unique_id):
+    wiki_object = WikiSearch.objects.get(unique_id=unique_id)
+    if not wiki_object.description:
+        description = generate_description()
+    else:
+        description = wiki_object.description
+    args = {'wiki_object':wiki_object,'description':description}
+    return render(request, 'home/view_detailed_description.html',args)
 
 
 

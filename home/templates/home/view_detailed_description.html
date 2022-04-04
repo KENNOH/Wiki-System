@@ -42,8 +42,7 @@
                 <h3 class="black-heading font-weight-bold">Introduction</h3>
                 <h5 class="black-heading font-weight-bold">Title: {{ wiki_object.title }}</h5>
                 <p class="black-heading">Viewed: {{ wiki_object.views }} times</p>
-                <p class="black-heading">Description: {{ wiki_object.description|truncatewords:3}}
-                    <a class="font-weight-bold text-danger" href="{% url 'fetch_description' unique_id=wiki_object.unique_id %}">[ detaileddescription ]</a>
+                <p class="black-heading">Description: {{ description }}
                 </p>
                 <h6 class="black-heading">Created At: {{ wiki_object.created_at }}</h6>
                 <div class="row">

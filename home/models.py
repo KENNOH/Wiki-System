@@ -1,17 +1,15 @@
+import imp
 from django.db import models
 from django.db.models.signals import pre_save,post_save
 from django.dispatch import receiver
-import string
-import random
+from .utils import id_generator
 import datetime
 from datetime import timedelta
 from django.utils.timezone import make_aware
 # Create your models here.
 
 
-""""Generates unique ids"""""
-def id_generator(size=8, chars=string.ascii_uppercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
+
 
 
 class WikiSearch(models.Model):
