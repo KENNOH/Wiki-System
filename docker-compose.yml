@@ -1,0 +1,149 @@
+# Verion of docker-compose to use 
+version: "3"
+services:
+
+  nginx:
+    build: ./nginx
+    container_name: Nginx
+    volumes:
+      - .:/wiki_system
+      - staticfiles:/home/app/static
+      - mediafiles:/home/app/media
+    ports:
+      - 8008:80
+    depends_on:
+      - wiki_system
+
+
+
+  wiki_system:
+    build:
+      context: . 
+    container_name: Django
+    restart: always
+    ports:
+      - 8000:8000
+    volumes: 
+      - .:/wiki_system
+      - staticfiles:/home/app/static
+      - mediafiles:/home/app/media
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             python manage.py makemigrations --noinput &&
+             python manage.py migrate --noinput &&
+             gunicorn --workers 3 --max-requests 50 --max-requests-jitter 25 -b 0.0.0.0:8000 wiki_system.wsgi --reload"
+    env_file:
+      - .env
+    environment:
+      - DB_NAME=$DB_NAME
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_HOST=db
+      - DB_PORT=$DB_PORT
+    depends_on:
+      - db
+
+
+
+  flower:
+    build:
+      context: .
+    container_name: Celery_Flower
+    restart: unless-stopped
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             celery -A wiki_system flower --port=5555 worker --pool=solo -l info"       
+    volumes: 
+      - .:/wiki_system
+      - staticfiles:/home/app/static
+      - mediafiles:/home/app/media
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - db
+      - redis
+
+
+  beat:
+    build:
+      context: .
+    container_name: Celery_Beat
+    command: celery -A wiki_system beat -l info
+    volumes:
+      - .:/wiki_system
+    env_file:
+      - .env
+    environment:
+      - DB_NAME=$DB_NAME
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_HOST=db
+      - DB_PORT=$DB_PORT
+    depends_on:
+      - wiki_system
+      - rabbitmq
+      - db
+      - redis
+      - celery
+      
+
+
+  celery:
+    build:
+      context: .
+    container_name: Celery
+    command: celery -A wiki_system worker --concurrency=3 -l info
+    volumes:
+      - .:/wiki_system
+    env_file:
+      - .env
+    environment:
+      - DB_NAME=$DB_NAME
+      - DB_USER=$DB_USER
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_HOST=db
+      - DB_PORT=$DB_PORT
+    depends_on:
+      - wiki_system
+      - rabbitmq
+      - db
+      - redis
+
+
+  db:
+    image: postgres:14-alpine
+    container_name: PostgresDb
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=$DB_NAME
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+
+
+
+  redis:
+    image: redis:7.0.0-alpine
+    expose:
+      - 6379
+    
+
+
+  rabbitmq:
+    container_name: Rabbitmq
+    image: rabbitmq:3.8-management-alpine
+    env_file:
+      - .env
+    environment:
+      - RABBITMQ_DEFAULT_USER=$RABBITMQUSER
+      - RABBITMQ_DEFAULT_PASS=$RABBITMQPASSWORD
+      - RABBITMQ_DEFAULT_VHOST=$RABBITMQVHOST
+    ports:
+      - 5672:5672
+      - 15672:15672 
+
+
+volumes:
+  staticfiles:
+  mediafiles:

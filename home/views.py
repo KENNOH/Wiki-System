@@ -35,6 +35,7 @@ def search(request):
 
 
 
+
 def new_page(request,unique_id):
     wiki_object = WikiSearch.objects.get(unique_id=unique_id)
     data = {'unique_id':unique_id}
