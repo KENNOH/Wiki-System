@@ -52,7 +52,7 @@ services:
     restart: unless-stopped
     command: >
       sh -c "python manage.py collectstatic --noinput &&
-             celery -A wiki_system flower --port=5555 worker --pool=solo -l info"       
+             celery -A wiki_system flower --port=5555 worker --url_prefix=flower --pool=solo -l info"       
     volumes: 
       - .:/wiki_system
       - staticfiles:/home/app/static
@@ -63,6 +63,7 @@ services:
       - rabbitmq
       - db
       - redis
+
 
 
   beat:
@@ -142,6 +143,7 @@ services:
     ports:
       - 5672:5672
       - 15672:15672 
+
 
 
 volumes:
