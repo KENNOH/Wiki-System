@@ -1,4 +1,3 @@
-import imp
 from django.shortcuts import render, redirect
 from django.template.context_processors import csrf
 from .forms import UserSignInForm

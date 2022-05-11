@@ -20,7 +20,7 @@ services:
     build:
       context: . 
     container_name: Django
-    restart: always
+    restart: unless-stopped
     ports:
       - 8000:8000
     volumes: 
@@ -70,6 +70,7 @@ services:
     build:
       context: .
     container_name: Celery_Beat
+    restart: unless-stopped
     command: celery -A wiki_system beat -l info
     volumes:
       - .:/wiki_system
@@ -94,6 +95,7 @@ services:
     build:
       context: .
     container_name: Celery
+    restart: unless-stopped
     command: celery -A wiki_system worker --concurrency=3 -l info
     volumes:
       - .:/wiki_system

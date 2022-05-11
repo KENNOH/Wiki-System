@@ -157,3 +157,15 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json', 'application/text']
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_WORKER_MAX_TASKS_PER_CHILD = 100
+
+
+
+"""Runs Every Minute"""
+# from celery.schedules import crontab
+# CELERY_BEAT_SCHEDULE = {
+#     'scheduled_task': {
+#         'task': 'home.tasks.scheduled_task',
+#         'schedule': crontab(),
+#     },
+# }
+

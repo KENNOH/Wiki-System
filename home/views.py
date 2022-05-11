@@ -21,6 +21,7 @@ def home(request):
     return render(request, 'home/home.html',args)
 
 
+
 def search(request):
     search_key = request.GET['search_key']
     wiki_items_query = WikiSearch.objects.all().filter(is_published=True).filter(
