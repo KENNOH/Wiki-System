@@ -13,4 +13,5 @@ venv
 sqlite3.db
 .env
 entrypoint.sh
+nginx/
 Pipfile

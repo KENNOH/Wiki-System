@@ -23,12 +23,3 @@ def update_wiki_views(self,data):
             subscription.save()
     except:
         self.retry()
-
-
-
-@app.task(bind=True, reject_on_worker_lost=True, autoretry_for=(Exception,), retry_backoff=5, retry_jitter=True, retry_kwargs={'max_retries': 5})
-def scheduled_task(self):
-    try:
-        print("celery beat is working!")
-    except:
-        self.retry()

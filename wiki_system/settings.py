@@ -121,51 +121,39 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-REPOSITORY_ROOT = os.path.dirname(BASE_DIR)
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(REPOSITORY_ROOT, 'static/')
-MEDIA_URL = ''
-MEDIA_ROOT = os.path.join(REPOSITORY_ROOT, 'media/')
+# REPOSITORY_ROOT = os.path.dirname(BASE_DIR)
+# STATIC_URL = 'static/'
+# STATIC_ROOT = os.path.join(REPOSITORY_ROOT, 'static/')
+# MEDIA_URL = ''
+# MEDIA_ROOT = os.path.join(REPOSITORY_ROOT, 'media/')
 
-# AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
-# AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
-# AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
-# AWS_S3_ENDPOINT_URL = config('AWS_S3_ENDPOINT_URL')
-# AWS_S3_CUSTOM_DOMAIN = config('AWS_S3_CUSTOM_DOMAIN')
-# AWS_S3_SIGNATURE_VERSION = 's3v4'
-# AWS_S3_OBJECT_PARAMETERS = {
-#     'CacheControl': 'max-age=86400',
-# }
-# AWS_S3_FILE_OVERWRITE = False
-# AWS_DEFAULT_ACL = 'public-read'
-# STATIC_URL = '{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, 'static')
-# STATIC_ROOT = 'static/'
-# MEDIA_URL = '{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, 'media')
-# MEDIA_ROOT = 'media/'
-# STATICFILES_STORAGE = 'custom_storages.StaticStorage'
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_ENDPOINT_URL = config('AWS_S3_ENDPOINT_URL')
+AWS_S3_CUSTOM_DOMAIN = config('AWS_S3_CUSTOM_DOMAIN')
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = 'public-read'
+STATIC_URL = '{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, 'static')
+STATIC_ROOT = 'static/'
+MEDIA_URL = '{}/{}/'.format(AWS_S3_CUSTOM_DOMAIN, 'media')
+MEDIA_ROOT = 'media/'
+STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 USE_THOUSAND_SEPARATOR = True
 LOGOUT_REDIRECT_URL = 'auth/sign-in/'
 
 
-CELERY_BROKER_URL = 'amqp://'+config('RABBITMQUSER')+':'+config('RABBITMQPASSWORD')+'@rabbitmq'+'/'+config('RABBITMQVHOST')
-CELERY_RESULT_BACKEND = 'redis://'+config('REDIS_IP')+':'+config('REDIS_PORT')
+CELERY_BROKER_URL = 'amqp://'+config('RABBITMQUSER')+':'+config('RABBITMQPASSWORD')+'@localhost/'+config('RABBITMQVHOST')
+# CELERY_RESULT_BACKEND = 'redis://'+config('REDIS_IP')+':6379'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json', 'application/text']
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_WORKER_MAX_TASKS_PER_CHILD = 100
-
-
-
-"""Runs Every Minute"""
-# from celery.schedules import crontab
-# CELERY_BEAT_SCHEDULE = {
-#     'scheduled_task': {
-#         'task': 'home.tasks.scheduled_task',
-#         'schedule': crontab(),
-#     },
-# }
-

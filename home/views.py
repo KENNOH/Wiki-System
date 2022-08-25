@@ -21,7 +21,6 @@ def home(request):
     return render(request, 'home/home.html',args)
 
 
-
 def search(request):
     search_key = request.GET['search_key']
     wiki_items_query = WikiSearch.objects.all().filter(is_published=True).filter(
@@ -33,7 +32,6 @@ def search(request):
     wiki_found_items = paginator.get_page(page_number)
     args = {'wiki_found_items':wiki_found_items}
     return render(request, 'home/home.html',args)
-
 
 
 
